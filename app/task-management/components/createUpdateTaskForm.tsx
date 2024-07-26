@@ -1,9 +1,11 @@
 "use client";
+
 import { useForm, SubmitHandler } from "react-hook-form";
 import IRegisterOptions from "@/app/interfaces/iRegisterOptions";
 import ITaskManagement from "@/app/interfaces/iTaskManagementPayload";
 import ISelectOptions from "@/app/interfaces/iSelectOptions";
 import priorityOptions from "@/app/constants/priorityOptions";
+import statusOptions from "@/app/constants/statusOptions";
 import axios from "axios";
 import { useState } from "react";
 
@@ -143,25 +145,20 @@ export default function CreateUpdateTaskForm() {
 
         <div className="my-1">
           <div className="flex items-center space-x-4">
-            <label className="inline-flex items-center">
-              <input
-                {...register("status")}
-                type="radio"
-                value="0"
-                className="form-radio text-blue-600 h-4 w-4"
-                defaultChecked
-              />
-              <span className="ml-2 text-sm">Incomplete</span>
-            </label>
-            <label className="inline-flex items-center">
-              <input
-                {...register("status")}
-                type="radio"
-                value="1"
-                className="form-radio text-blue-600 h-4 w-4"
-              />
-              <span className="ml-2 text-sm">Completed</span>
-            </label>
+            {statusOptions.map((statusOption, index) => (
+              <div key={`${statusOption.label}-${statusOption.value}`}>
+                <label className="inline-flex items-center">
+                  <input
+                    {...register("status")}
+                    type="radio"
+                    value={statusOption.value}
+                    className="form-radio text-blue-600 h-4 w-4"
+                    defaultChecked={statusOption.value === "0"}
+                  />
+                  <span className="ml-2 text-sm">{statusOption.label}</span>
+                </label>
+              </div>
+            ))}
           </div>
         </div>
 
