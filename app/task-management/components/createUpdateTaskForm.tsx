@@ -1,16 +1,23 @@
 "use client";
-import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import IRegisterOptions from "@/app/interfaces/iRegisterOptions";
 import ITaskManagement from "@/app/interfaces/iTaskManagementPayload";
 import ISelectOptions from "@/app/interfaces/iSelectOptions";
 import priorityOptions from "@/app/constants/priorityOptions";
+import axios from "axios";
+import { useState } from "react";
 
 export default function CreateUpdateTaskForm() {
   const {
     handleSubmit,
     register,
     formState: { errors },
+    reset,
   } = useForm<ITaskManagement>();
+
+  const [loading, setLoading] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const registerOptions: IRegisterOptions = {
     title: {
@@ -24,8 +31,38 @@ export default function CreateUpdateTaskForm() {
   const createOrUpdateTask: SubmitHandler<ITaskManagement> = async (
     data: ITaskManagement
   ) => {
-    const url: string = "";
-    console.log(data);
+    const url: string = `${process.env.NEXT_PUBLIC_API_URL}/task`;
+    const payload: ITaskManagement = {
+      ...data,
+      priority: data.priority ? +data?.priority : null,
+      status: +data.status,
+    };
+    setLoading(true);
+    setSuccessMessage("");
+    setErrorMessage("");
+    axios
+      .post(url, payload)
+      .then(() => {
+        //resetting form upon successfully submission
+        reset({
+          title: null,
+          description: null,
+          priority: null,
+          endDate: null,
+          status: 0,
+        });
+        setSuccessMessage("Task Added.");
+      })
+      .catch((responses) => {
+        let errorMessages = responses?.response?.data?.message || [];
+        errorMessages = Array.isArray(errorMessages)
+          ? errorMessages.join("<hr />")
+          : errorMessages;
+        setErrorMessage(errorMessages);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
@@ -104,13 +141,13 @@ export default function CreateUpdateTaskForm() {
           />
         </div>
 
-        <div className="my-6">
+        <div className="my-1">
           <div className="flex items-center space-x-4">
             <label className="inline-flex items-center">
               <input
                 {...register("status")}
                 type="radio"
-                value="Incomplete"
+                value="0"
                 className="form-radio text-blue-600 h-4 w-4"
                 defaultChecked
               />
@@ -120,7 +157,7 @@ export default function CreateUpdateTaskForm() {
               <input
                 {...register("status")}
                 type="radio"
-                value="Completed"
+                value="1"
                 className="form-radio text-blue-600 h-4 w-4"
               />
               <span className="ml-2 text-sm">Completed</span>
@@ -128,13 +165,28 @@ export default function CreateUpdateTaskForm() {
           </div>
         </div>
 
+        {errorMessage.length > 0 && (
+          <div
+            className="bg-red-500 text-white text-sm p-2"
+            dangerouslySetInnerHTML={{ __html: errorMessage }}
+          />
+        )}
+        {successMessage.length > 0 && (
+          <div className="bg-green-500 text-white text-sm p-2">
+            {successMessage}
+          </div>
+        )}
+
         <div className="text-center">
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-200 text-sm"
-          >
-            Add Task
-          </button>
+          {loading && "Loading....."}
+          {!loading && (
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-200 text-sm mt-5"
+            >
+              Add Task
+            </button>
+          )}
         </div>
       </form>
     </div>

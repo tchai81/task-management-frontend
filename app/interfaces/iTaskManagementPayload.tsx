@@ -1,7 +1,7 @@
 export default interface ITaskManagement {
-  title: string;
-  description: string;
-  priority: string;
-  endDate: Date;
-  status: "Completed" | "InComplete";
+  title: string | null;
+  description: string | null;
+  priority: number | null;
+  endDate: Date | null;
+  status: number;
 }
