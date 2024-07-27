@@ -1,9 +1,9 @@
-import CreateUpdateTaskForm from "../components/createUpdateTaskForm";
+import CreateForm from "../components/createForm";
 
 export default function CreateTaskManagement() {
   return (
     <div className="max-w-md mx-auto">
-      <CreateUpdateTaskForm />
+      <CreateForm />
     </div>
   );
 }

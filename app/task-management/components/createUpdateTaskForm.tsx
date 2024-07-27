@@ -1,25 +1,35 @@
 "use client";
 
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useEffect } from "react";
 import IRegisterOptions from "@/app/interfaces/iRegisterOptions";
 import ITask from "@/app/interfaces/iTask";
+import ICreateUpdateFormLabels from "@/app/interfaces/iCreateUpdateFormLabels";
 import ISelectOptions from "@/app/interfaces/iSelectOptions";
 import priorityOptions from "@/app/constants/priorityOptions";
 import statusOptions from "@/app/constants/statusOptions";
-import axios from "axios";
-import { useState } from "react";
 
-export default function CreateUpdateTaskForm() {
+export default function CreateUpdateTaskForm({
+  loading,
+  successMessage,
+  errorMessage,
+  resetForm,
+  onSubmitHandler,
+  createUpdateFormLabels,
+}: {
+  loading: boolean;
+  successMessage: string;
+  errorMessage: string;
+  resetForm: boolean;
+  onSubmitHandler: SubmitHandler<ITask>;
+  createUpdateFormLabels: ICreateUpdateFormLabels;
+}) {
   const {
     handleSubmit,
     register,
     formState: { errors },
     reset,
   } = useForm<ITask>();
-
-  const [loading, setLoading] = useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string>("");
-  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const registerOptions: IRegisterOptions = {
     title: {
@@ -30,45 +40,24 @@ export default function CreateUpdateTaskForm() {
     },
   };
 
-  const createOrUpdateTask: SubmitHandler<ITask> = async (data: ITask) => {
-    const url: string = `${process.env.NEXT_PUBLIC_API_URL}/task`;
-    const payload: ITask = {
-      ...data,
-      priority: data.priority ? +data?.priority : null,
-      status: +data.status,
-    };
-    setLoading(true);
-    setSuccessMessage("");
-    setErrorMessage("");
-    axios
-      .post(url, payload)
-      .then(() => {
-        //resetting form upon successfully submission
-        reset({
-          title: null,
-          description: null,
-          priority: null,
-          endDate: null,
-          status: 0,
-        });
-        setSuccessMessage("Task Added.");
-      })
-      .catch((responses) => {
-        let errorMessages = responses?.response?.data?.message || [];
-        errorMessages = Array.isArray(errorMessages)
-          ? errorMessages.join("<hr />")
-          : errorMessages;
-        setErrorMessage(errorMessages);
-      })
-      .finally(() => {
-        setLoading(false);
+  useEffect(() => {
+    if (resetForm) {
+      reset({
+        title: null,
+        description: null,
+        priority: null,
+        endDate: null,
+        status: 0,
       });
-  };
+    }
+  }, [resetForm]);
 
   return (
     <div className="mt-10 p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4 text-center">Add New Task</h2>
-      <form onSubmit={handleSubmit(createOrUpdateTask)}>
+      <h2 className="text-xl font-bold mb-4 text-center">
+        {createUpdateFormLabels.title}
+      </h2>
+      <form onSubmit={handleSubmit(onSubmitHandler)}>
         <div className="mb-4">
           <label
             htmlFor="title"
@@ -179,7 +168,7 @@ export default function CreateUpdateTaskForm() {
               type="submit"
               className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-200 text-sm mt-5"
             >
-              Add Task
+              {createUpdateFormLabels.submitButtonLabel}
             </button>
           )}
         </div>
