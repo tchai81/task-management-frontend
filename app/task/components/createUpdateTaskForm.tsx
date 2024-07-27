@@ -8,8 +8,10 @@ import ICreateUpdateFormLabels from "@/app/interfaces/iCreateUpdateFormLabels";
 import ISelectOptions from "@/app/interfaces/iSelectOptions";
 import priorityOptions from "@/app/constants/priorityOptions";
 import statusOptions from "@/app/constants/statusOptions";
+import formatDate from "@/app/mixins/formatDate";
 
 export default function CreateUpdateTaskForm({
+  task,
   loading,
   successMessage,
   errorMessage,
@@ -17,6 +19,7 @@ export default function CreateUpdateTaskForm({
   onSubmitHandler,
   createUpdateFormLabels,
 }: {
+  task: ITask | null;
   loading: boolean;
   successMessage: string;
   errorMessage: string;
@@ -47,10 +50,21 @@ export default function CreateUpdateTaskForm({
         description: null,
         priority: null,
         endDate: null,
-        status: 0,
+        status: "0",
       });
     }
   }, [resetForm]);
+
+  useEffect(() => {
+    const formattedDate = formatDate(task?.endDate || null);
+    reset({
+      title: task?.title,
+      description: task?.description,
+      priority: task?.priority,
+      endDate: formattedDate,
+      status: String(task?.status),
+    });
+  }, [task]);
 
   return (
     <div className="mt-10 p-6 bg-white rounded-lg shadow-md">
@@ -140,7 +154,6 @@ export default function CreateUpdateTaskForm({
                     type="radio"
                     value={statusOption.value}
                     className="form-radio text-blue-600 h-4 w-4"
-                    defaultChecked={statusOption.value === "0"}
                   />
                   <span className="ml-2 text-sm">{statusOption.label}</span>
                 </label>
