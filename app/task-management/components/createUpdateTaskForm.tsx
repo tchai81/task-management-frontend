@@ -2,7 +2,7 @@
 
 import { useForm, SubmitHandler } from "react-hook-form";
 import IRegisterOptions from "@/app/interfaces/iRegisterOptions";
-import ITaskManagement from "@/app/interfaces/iTaskManagementPayload";
+import ITask from "@/app/interfaces/iTask";
 import ISelectOptions from "@/app/interfaces/iSelectOptions";
 import priorityOptions from "@/app/constants/priorityOptions";
 import statusOptions from "@/app/constants/statusOptions";
@@ -15,7 +15,7 @@ export default function CreateUpdateTaskForm() {
     register,
     formState: { errors },
     reset,
-  } = useForm<ITaskManagement>();
+  } = useForm<ITask>();
 
   const [loading, setLoading] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string>("");
@@ -30,11 +30,9 @@ export default function CreateUpdateTaskForm() {
     },
   };
 
-  const createOrUpdateTask: SubmitHandler<ITaskManagement> = async (
-    data: ITaskManagement
-  ) => {
+  const createOrUpdateTask: SubmitHandler<ITask> = async (data: ITask) => {
     const url: string = `${process.env.NEXT_PUBLIC_API_URL}/task`;
-    const payload: ITaskManagement = {
+    const payload: ITask = {
       ...data,
       priority: data.priority ? +data?.priority : null,
       status: +data.status,
