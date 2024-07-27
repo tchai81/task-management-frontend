@@ -1,6 +1,6 @@
 import UpdateForm from "../components/updateForm";
 
-export default function UpdateTaskManagement() {
+export default function UpdateTaskPage() {
   return (
     <div className="max-w-md mx-auto">
       <UpdateForm />
