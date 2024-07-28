@@ -67,7 +67,7 @@ export default function CreateUpdateTaskForm({
   }, [task]);
 
   return (
-    <div className="mt-10 p-6 bg-white rounded-lg shadow-md">
+    <div className="mt-2 p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-xl font-bold mb-4 text-center">
         {createUpdateFormLabels.title}
       </h2>

@@ -7,8 +7,11 @@ import ITask from "@/app/interfaces/iTask";
 import ICreateUpdateFormLabels from "@/app/interfaces/iCreateUpdateFormLabels";
 import axios from "axios";
 import CreateUpdateTaskForm from "./createUpdateTaskForm";
+import { useRouter } from "next/navigation";
+import handleBack from "@/app/mixins/handleBack";
 
 export default function UpdateForm() {
+  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -55,14 +58,24 @@ export default function UpdateForm() {
   };
 
   return (
-    <CreateUpdateTaskForm
-      task={task}
-      loading={loading}
-      successMessage={successMessage}
-      errorMessage={errorMessage}
-      resetForm={false}
-      onSubmitHandler={updateTask}
-      createUpdateFormLabels={createUpdateFormLabels}
-    />
+    <div>
+      <button
+        onClick={() => handleBack(router)}
+        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-xs"
+      >
+        Go Back
+      </button>
+      <div>
+        <CreateUpdateTaskForm
+          task={task}
+          loading={loading}
+          successMessage={successMessage}
+          errorMessage={errorMessage}
+          resetForm={false}
+          onSubmitHandler={updateTask}
+          createUpdateFormLabels={createUpdateFormLabels}
+        />
+      </div>
+    </div>
   );
 }

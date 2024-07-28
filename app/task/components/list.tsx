@@ -7,9 +7,9 @@ import {
   getCoreRowModel,
   useReactTable,
   flexRender,
-  getPaginationRowModel,
 } from "@tanstack/react-table";
 import columns from "@/app/columnDefs/task";
+import Link from "next/link";
 
 export default function TaskList() {
   const pageSize = 10;
@@ -37,10 +37,17 @@ export default function TaskList() {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row justify-end">
+      <div className="flex flex-col md:flex-row justify-end mb-2">
         <div className="flex items-center mb-1 w-full">
           <div className="flex w-full">
-            <div className="w-1/2">Tasks</div>
+            <div className="w-1/2">
+              <Link
+                href="/task/create"
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-xs"
+              >
+                Create Task
+              </Link>
+            </div>
             <div className="flex w-1/2 text-xs justify-center items-center">
               <h1 className={`mb-1 font-semibold mr-3`}>
                 Page {table.getState().pagination.pageIndex + 1} of{" "}
@@ -106,7 +113,7 @@ export default function TaskList() {
         </thead>
         <tbody className="table-row-group">
           {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="table-row text-sm bg-white text-black">
+            <tr key={row.id} className="table-row text-sm bg-white">
               {row.getVisibleCells().map((cell) => (
                 <td key={cell.id} className="table-cell border p-3 text-xs">
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
