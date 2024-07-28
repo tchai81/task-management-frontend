@@ -21,7 +21,7 @@ export default function UpdateForm() {
   const taskId = searchParams.get("id") || "";
 
   useEffect(() => {
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/task/${taskId}`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/task/get/${taskId}`;
     axios.get(apiUrl).then((response) => {
       setTask(response.data);
     });
