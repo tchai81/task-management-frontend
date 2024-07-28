@@ -12,21 +12,28 @@ import {
 import columns from "@/app/columnDefs/task";
 
 export default function TaskList() {
+  const pageSize = 10;
   const [data, setData] = useState<ITask[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [pageTotal, setPageTotal] = useState<number>(1);
 
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
   });
 
-  useEffect(() => {
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/task/get`;
+  const getTasks = () => {
+    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/task/get?page=${page}&pageSize=${pageSize}`;
     axios.get(apiUrl).then((responses) => {
-      setData(responses.data);
+      setData(responses.data[0]);
+      setPageTotal(Math.ceil(responses.data[1] / pageSize));
     });
-  }, []);
+  };
+
+  useEffect(() => {
+    getTasks();
+  }, [page]);
 
   return (
     <>
@@ -42,32 +49,32 @@ export default function TaskList() {
               {/* Page navigations */}
               <div className="text-white">
                 <button
-                  onClick={() => table.resetPageIndex()}
-                  disabled={!table.getCanPreviousPage()}
+                  onClick={() => setPage(1)}
+                  disabled={page === 1}
                   className={`mr-1 px-2 py-1 rounded-md disabled:bg-gray-200 bg-gray-400 text-xs`}
                 >
                   {`<<`}
                 </button>
 
                 <button
-                  onClick={() => table.previousPage()}
-                  disabled={!table.getCanPreviousPage()}
+                  onClick={() => setPage(page - 1)}
+                  disabled={page === 1}
                   className={`mr-1 px-2 py-1 rounded-md disabled:bg-gray-200 bg-gray-400 text-xs`}
                 >
                   {`<`}
                 </button>
 
                 <button
-                  onClick={() => table.nextPage()}
-                  disabled={!table.getCanNextPage()}
+                  onClick={() => setPage(page + 1)}
+                  disabled={page === pageTotal}
                   className={`mr-1 px-2 py-1 rounded-md disabled:bg-gray-200 bg-gray-400 text-xs`}
                 >
                   {`>`}
                 </button>
 
                 <button
-                  onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                  disabled={!table.getCanNextPage()}
+                  onClick={() => setPage(pageTotal)}
+                  disabled={page === pageTotal}
                   className={`px-2 py-1 rounded-md disabled:bg-gray-200 bg-gray-400 text-xs`}
                 >
                   {`>>`}
