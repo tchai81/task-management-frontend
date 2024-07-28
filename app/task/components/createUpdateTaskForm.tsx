@@ -50,7 +50,7 @@ export default function CreateUpdateTaskForm({
         description: null,
         priority: null,
         endDate: null,
-        status: "0",
+        status: 0,
       });
     }
   }, [resetForm]);
@@ -146,7 +146,7 @@ export default function CreateUpdateTaskForm({
 
         <div className="my-1">
           <div className="flex items-center space-x-4">
-            {statusOptions.map((statusOption, index) => (
+            {statusOptions.map((statusOption) => (
               <div key={`${statusOption.label}-${statusOption.value}`}>
                 <label className="inline-flex items-center">
                   <input
@@ -154,6 +154,7 @@ export default function CreateUpdateTaskForm({
                     type="radio"
                     value={statusOption.value}
                     className="form-radio text-blue-600 h-4 w-4"
+                    defaultChecked={+statusOption.value === 0}
                   />
                   <span className="ml-2 text-sm">{statusOption.label}</span>
                 </label>

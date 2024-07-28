@@ -24,8 +24,8 @@ export default function CreateForm() {
     const url: string = `${process.env.NEXT_PUBLIC_API_URL}/task`;
     const payload: ITask = {
       ...data,
-      priority: data.priority ? data?.priority : null,
-      status: data.status,
+      priority: data.priority ? +data?.priority : null,
+      status: +data.status,
     };
     setLoading(true);
     setSuccessMessage("");

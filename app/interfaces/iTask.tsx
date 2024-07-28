@@ -1,9 +1,9 @@
 export default interface ITask {
   title: string | null;
   description: string | null;
-  priority: string | null;
+  priority: number | string | null;
   endDate: string | null;
-  status: string;
+  status: number | string;
   createdAt?: Date;
   updatedAt?: Date;
 }

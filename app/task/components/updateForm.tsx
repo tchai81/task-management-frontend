@@ -34,8 +34,8 @@ export default function UpdateForm() {
     const url: string = `${process.env.NEXT_PUBLIC_API_URL}/task/${taskId}`;
     const payload: ITask = {
       ...data,
-      priority: data.priority ? data?.priority : null,
-      status: data.status,
+      priority: data.priority ? +data?.priority : null,
+      status: +data.status,
     };
     setLoading(true);
     setSuccessMessage("");
