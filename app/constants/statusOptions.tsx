@@ -2,7 +2,7 @@ import ISelectOptions from "../interfaces/iSelectOptions";
 
 const statusOptions: ISelectOptions[] = [
   {
-    label: "Incomplete",
+    label: "In Progress",
     value: "0",
   },
   {
