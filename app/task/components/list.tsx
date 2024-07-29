@@ -2,26 +2,24 @@
 
 import { useState, useEffect } from "react";
 import ITask from "@/app/interfaces/iTask";
+import ISelectOptions from "@/app/interfaces/iSelectOptions";
 import axios from "axios";
 import {
   getCoreRowModel,
   useReactTable,
   flexRender,
+  ColumnDef,
 } from "@tanstack/react-table";
-import columns from "@/app/columnDefs/task";
+import taskColumns from "@/app/columnDefs/task";
 import Link from "next/link";
+import statusOptions from "@/app/constants/statusOptions";
+import { useMemo } from "react";
 
 export default function TaskList() {
   const pageSize = 10;
   const [data, setData] = useState<ITask[]>([]);
   const [page, setPage] = useState<number>(1);
   const [pageTotal, setPageTotal] = useState<number>(1);
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
 
   const getTasks = () => {
     const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/task/get?page=${page}&pageSize=${pageSize}`;
@@ -34,6 +32,46 @@ export default function TaskList() {
   useEffect(() => {
     getTasks();
   }, [page]);
+
+  const additionalTaskColumns: ColumnDef<ITask>[] = [
+    {
+      header: "Status",
+      accessorKey: "status",
+      cell: (props: any) => {
+        const { id, status }: ITask = props.row.original;
+
+        const handleUpdateStatus = (currentStatus: number) => {
+          const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/task/${id}`;
+          axios.patch(apiUrl, { id, status: +!currentStatus }).then(() => {
+            //refresh the list upon update
+            getTasks();
+          });
+        };
+
+        const buttonColor = +status === 0 ? "bg-gray-500" : "bg-green-500";
+
+        const assignedStatus: ISelectOptions | undefined = statusOptions.find(
+          (statusOption: ISelectOptions) => status === +statusOption.value
+        );
+
+        return (
+          <button
+            onClick={() => handleUpdateStatus(+status)}
+            className={`${buttonColor} text-white px-4 py-2 rounded text-xs`}
+          >
+            {assignedStatus?.label}
+          </button>
+        );
+      },
+    },
+  ];
+
+  const columns = useMemo(() => [...taskColumns, ...additionalTaskColumns], []);
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   return (
     <>

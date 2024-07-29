@@ -1,4 +1,5 @@
 export default interface ITask {
+  id?: number;
   title: string | null;
   description: string | null;
   priority: number | string | null;

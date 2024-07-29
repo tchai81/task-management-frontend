@@ -3,24 +3,27 @@ import { ColumnDef } from "@tanstack/react-table";
 import formatDate from "../mixins/formatDate";
 import Link from "next/link";
 
-const columns: ColumnDef<ITask>[] = [
+const taskColumns: ColumnDef<ITask>[] = [
   {
     header: "Id",
     accessorKey: "id",
-    cell: (props: any) => (
-      <Link href={`/task/update?id=${props.getValue()}`}>
-        <div className="text-blue-500 underline">{props.getValue()}</div>
-      </Link>
-    ),
+    cell: (props: any) => {
+      const { id } = props.row.original;
+      return (
+        <Link href={`/task/update?id=${id}`}>
+          <div className="text-blue-500 underline">{id}</div>
+        </Link>
+      );
+    },
   },
   {
     header: "Title",
     accessorKey: "title",
     cell: (props: any) => {
-      const { id } = props.row.original;
+      const { id, title } = props.row.original;
       return (
         <Link href={`/task/update?id=${id}`}>
-          <div className="text-blue-500 underline">{props.getValue()}</div>
+          <div className="text-blue-500 underline">{title}</div>
         </Link>
       );
     },
@@ -32,14 +35,8 @@ const columns: ColumnDef<ITask>[] = [
   {
     header: "Due Date",
     accessorKey: "endDate",
-    cell: (props: any) => {
-      return formatDate(props.getValue());
-    },
-  },
-  {
-    header: "Status",
-    accessorKey: "status",
+    cell: (props: any) => formatDate(props.getValue()),
   },
 ];
 
-export default columns;
+export default taskColumns;
