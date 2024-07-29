@@ -86,7 +86,7 @@ export default function TaskList() {
                 Create Task
               </Link>
             </div>
-            <div className="flex w-1/2 text-xs justify-center items-center">
+            <div className="flex w-1/2 text-xs justify-end items-center">
               <h1 className={`mb-1 font-semibold mr-3`}>
                 Page {table.getState().pagination.pageIndex + 1} of{" "}
                 {table.getPageCount()}
@@ -136,7 +136,7 @@ export default function TaskList() {
               {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
-                  className="table-cell border border-black-500 bg-black text-white font-semibold p-3 text-xs"
+                  className="table-cell border border-black-500 bg-black text-white font-semibold p-3 text-left text-xs"
                 >
                   {header.isPlaceholder
                     ? null
