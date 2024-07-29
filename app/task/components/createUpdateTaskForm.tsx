@@ -154,7 +154,6 @@ export default function CreateUpdateTaskForm({
                     type="radio"
                     value={statusOption.value}
                     className="form-radio text-blue-600 h-4 w-4"
-                    defaultChecked={+statusOption.value === 0}
                   />
                   <span className="ml-2 text-sm">{statusOption.label}</span>
                 </label>
