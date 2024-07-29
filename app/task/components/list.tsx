@@ -14,11 +14,14 @@ import taskColumns from "@/app/columnDefs/task";
 import Link from "next/link";
 import statusOptions from "@/app/constants/statusOptions";
 import { useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function TaskList() {
   const pageSize = 10;
   const [data, setData] = useState<ITask[]>([]);
-  const [page, setPage] = useState<number>(1);
+  const searchParams = useSearchParams();
+  const currentPage = searchParams.get("page") || 1;
+  const [page, setPage] = useState<number>(+currentPage);
   const [pageTotal, setPageTotal] = useState<number>(1);
 
   const getTasks = (page: number) => {
