@@ -21,7 +21,7 @@ export default function TaskList() {
   const [page, setPage] = useState<number>(1);
   const [pageTotal, setPageTotal] = useState<number>(1);
 
-  const getTasks = () => {
+  const getTasks = (page: number) => {
     const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/task/get?page=${page}&pageSize=${pageSize}`;
     axios.get(apiUrl).then((responses) => {
       setData(responses.data[0]);
@@ -30,7 +30,7 @@ export default function TaskList() {
   };
 
   useEffect(() => {
-    getTasks();
+    getTasks(page);
   }, [page]);
 
   const additionalTaskColumns: ColumnDef<ITask>[] = [
@@ -44,7 +44,7 @@ export default function TaskList() {
           const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/task/${id}`;
           axios.patch(apiUrl, { id, status: +!currentStatus }).then(() => {
             //refresh the list upon update
-            getTasks();
+            getTasks(page);
           });
         };
 
@@ -66,7 +66,10 @@ export default function TaskList() {
     },
   ];
 
-  const columns = useMemo(() => [...taskColumns, ...additionalTaskColumns], []);
+  const columns = useMemo(
+    () => [...taskColumns, ...additionalTaskColumns],
+    [page]
+  );
   const table = useReactTable({
     data,
     columns,
@@ -88,8 +91,7 @@ export default function TaskList() {
             </div>
             <div className="flex w-1/2 text-xs justify-end items-center">
               <h1 className={`mb-1 font-semibold mr-3`}>
-                Page {table.getState().pagination.pageIndex + 1} of{" "}
-                {table.getPageCount()}
+                Page {page} of {pageTotal}
               </h1>
               {/* Page navigations */}
               <div className="text-white">
