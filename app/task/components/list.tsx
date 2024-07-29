@@ -95,7 +95,7 @@ export default function TaskList() {
               <div className="text-white">
                 <button
                   onClick={() => setPage(1)}
-                  disabled={page === 1}
+                  disabled={data.length === 0 || page === 1}
                   className={`mr-1 px-2 py-1 rounded-md disabled:bg-gray-200 bg-gray-400 text-xs`}
                 >
                   {`<<`}
@@ -103,7 +103,7 @@ export default function TaskList() {
 
                 <button
                   onClick={() => setPage(page - 1)}
-                  disabled={page === 1}
+                  disabled={data.length === 0 || page === 1}
                   className={`mr-1 px-2 py-1 rounded-md disabled:bg-gray-200 bg-gray-400 text-xs`}
                 >
                   {`<`}
@@ -111,7 +111,7 @@ export default function TaskList() {
 
                 <button
                   onClick={() => setPage(page + 1)}
-                  disabled={page === pageTotal}
+                  disabled={data.length === 0 || page === pageTotal}
                   className={`mr-1 px-2 py-1 rounded-md disabled:bg-gray-200 bg-gray-400 text-xs`}
                 >
                   {`>`}
@@ -119,7 +119,7 @@ export default function TaskList() {
 
                 <button
                   onClick={() => setPage(pageTotal)}
-                  disabled={page === pageTotal}
+                  disabled={data.length === 0 || page === pageTotal}
                   className={`px-2 py-1 rounded-md disabled:bg-gray-200 bg-gray-400 text-xs`}
                 >
                   {`>>`}
@@ -150,15 +150,26 @@ export default function TaskList() {
           ))}
         </thead>
         <tbody className="table-row-group">
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="table-row text-sm bg-white">
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="table-cell border p-3 text-xs">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
+          {data.length == 0 && (
+            <tr className="table-row text-sm bg-white">
+              <td
+                className="table-cell border p-3 text-xs text-center"
+                colSpan={5}
+              >
+                No tasks assigned
+              </td>
             </tr>
-          ))}
+          )}
+          {data.length > 0 &&
+            table.getRowModel().rows.map((row) => (
+              <tr key={row.id} className="table-row text-sm bg-white">
+                {row.getVisibleCells().map((cell) => (
+                  <td key={cell.id} className="table-cell border p-3 text-xs">
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
         </tbody>
       </table>
     </>
