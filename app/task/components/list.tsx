@@ -10,11 +10,11 @@ import {
   flexRender,
   ColumnDef,
 } from "@tanstack/react-table";
-import taskColumns from "@/app/columnDefs/task";
 import Link from "next/link";
 import statusOptions from "@/app/constants/statusOptions";
 import { useMemo } from "react";
 import { useSearchParams } from "next/navigation";
+import formatDate from "@/app/mixins/formatDate";
 
 export default function TaskList() {
   const pageSize = 10;
@@ -36,7 +36,40 @@ export default function TaskList() {
     getTasks(page);
   }, [page]);
 
-  const additionalTaskColumns: ColumnDef<ITask>[] = [
+  const taskColumns: ColumnDef<ITask>[] = [
+    {
+      header: "Id",
+      accessorKey: "id",
+      cell: (props: any) => {
+        const { id } = props.row.original;
+        return (
+          <Link href={`/task/update?id=${id}&page=${page}`}>
+            <div className="text-blue-500 underline">{id}</div>
+          </Link>
+        );
+      },
+    },
+    {
+      header: "Title",
+      accessorKey: "title",
+      cell: (props: any) => {
+        const { id, title } = props.row.original;
+        return (
+          <Link href={`/task/update?id=${id}&page=${page}`}>
+            <div className="text-blue-500 underline">{title}</div>
+          </Link>
+        );
+      },
+    },
+    {
+      header: "Description",
+      accessorKey: "description",
+    },
+    {
+      header: "Due Date",
+      accessorKey: "endDate",
+      cell: (props: any) => formatDate(props.getValue()),
+    },
     {
       header: "Status",
       accessorKey: "status",
@@ -69,10 +102,7 @@ export default function TaskList() {
     },
   ];
 
-  const columns = useMemo(
-    () => [...taskColumns, ...additionalTaskColumns],
-    [page]
-  );
+  const columns = useMemo(() => [...taskColumns], [page]);
   const table = useReactTable({
     data,
     columns,

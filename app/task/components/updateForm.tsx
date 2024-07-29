@@ -8,7 +8,6 @@ import ICreateUpdateFormLabels from "@/app/interfaces/iCreateUpdateFormLabels";
 import axios from "axios";
 import CreateUpdateTaskForm from "./createUpdateTaskForm";
 import { useRouter } from "next/navigation";
-import handleBack from "@/app/mixins/handleBack";
 
 export default function UpdateForm() {
   const router = useRouter();
@@ -21,7 +20,7 @@ export default function UpdateForm() {
     submitButtonLabel: "Update Task",
   };
   const searchParams = useSearchParams();
-  const taskId = searchParams.get("id") || "";
+  const { id: taskId, page } = Object.fromEntries(searchParams.entries());
 
   useEffect(() => {
     const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/task/get/${taskId}`;
@@ -60,7 +59,7 @@ export default function UpdateForm() {
   return (
     <div>
       <button
-        onClick={() => handleBack(router)}
+        onClick={() => router.push(`/task/list?page=${page}`)}
         className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-xs"
       >
         Go Back
