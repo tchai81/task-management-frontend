@@ -101,7 +101,7 @@ export default function CreateUpdateTaskForm({
             Description
           </label>
           <textarea
-            {...register("description", registerOptions.priority)}
+            {...register("description")}
             rows={4}
             placeholder="Enter task description"
             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-200 text-sm"
