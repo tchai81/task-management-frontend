@@ -41,6 +41,9 @@ export default function CreateUpdateTaskForm({
     priority: {
       required: "Priority is required",
     },
+    status: {
+      required: "Priority is required",
+    },
   };
 
   useEffect(() => {
@@ -150,7 +153,7 @@ export default function CreateUpdateTaskForm({
               <div key={`${statusOption.label}-${statusOption.value}`}>
                 <label className="inline-flex items-center">
                   <input
-                    {...register("status")}
+                    {...register("status", registerOptions.status)}
                     type="radio"
                     value={statusOption.value}
                     className="form-radio text-blue-600 h-4 w-4"
@@ -159,6 +162,9 @@ export default function CreateUpdateTaskForm({
                 </label>
               </div>
             ))}
+          </div>
+          <div className="flex text-xs text-red-500">
+            {errors.status && `${errors?.status?.message}`}
           </div>
         </div>
 

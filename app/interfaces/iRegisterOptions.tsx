@@ -5,4 +5,5 @@ interface IFormValidationRule {
 export default interface IRegisterOptions {
   title: IFormValidationRule;
   priority: IFormValidationRule;
+  status: IFormValidationRule;
 }
